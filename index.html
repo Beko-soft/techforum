@@ -3,62 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechForum | Topluluk</title>
+    <title>TechForum | Teknik Tartışma Platformu</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 0 20px;
-            /* GitHub Dark Dimmed Arka Plan Rengi */
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
             background-color: #22272e;
-            /* GitHub Dark Ana Yazı Rengi */
             color: #adbac7;
         }
-        h1 {
-            color: #f0f6fc;
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             border-bottom: 1px solid #444c56;
-            padding-bottom: 12px;
-            font-size: 28px;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
         }
-        p {
-            color: #768390;
-            font-size: 16px;
-            line-height: 1.5;
+        
+        h1 { 
+            color: #f0f6fc; 
+            margin: 0; 
+            font-size: 24px; 
+            font-weight: 600;
         }
-        .forum-konteyner {
-            /* GitHub Dark Kart Arka Planı */
+        
+        .btn-yeni-konu {
+            background-color: #347d39;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .btn-yeni-konu:hover { 
+            background-color: #46954a; 
+        }
+
+        .forum-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+        }
+
+        .sidebar {
             background: #1c2128;
-            padding: 24px;
             border: 1px solid #444c56;
             border-radius: 6px;
-            margin-top: 24px;
+            padding: 15px;
+            height: fit-content;
+        }
+        
+        .sidebar h3 {
+            color: #f0f6fc;
+            font-size: 13px;
+            margin-top: 0;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .kategori-link {
+            display: block;
+            color: #539bf5;
+            text-decoration: none;
+            padding: 8px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .kategori-link:hover, .kategori-link.active {
+            background-color: #22272e;
+            color: #f0f6fc;
+        }
+
+        .main-content {
+            background: #1c2128;
+            border: 1px solid #444c56;
+            border-radius: 6px;
+            padding: 24px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .forum-header-info {
+            border-bottom: 1px solid #444c56;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .forum-header-info h2 { 
+            margin: 0 0 5px 0; 
+            color: #f0f6fc; 
+            font-size: 20px; 
+        }
+        
+        .forum-header-info p { 
+            margin: 0; 
+            color: #768390; 
+            font-size: 14px; 
         }
     </style>
 </head>
 <body>
 
-    <h1>Topluluk Forumu</h1>
-    <p>Hoş geldiniz! Aşağıdaki alandan yeni tartışmalar başlatabilir veya var olan konulara fikirlerinizi yazabilirsiniz.</p>
+    <header>
+        <h1>TechForum</h1>
+        <a href="https://github.com/beko-soft/techforum/discussions/new" target="_blank" class="btn-yeni-konu">Yeni Konu Aç</a>
+    </header>
 
-    <div class="forum-konteyner">
-        <script src="https://giscus.app/client.js"
-                data-repo="beko-soft/techforum"
-                data-repo-id="R_kgDOS5yp7g"
-                data-category="General"
-                data-category-id="DIC_kwDOS5yp7s4C_Fuu"
-                data-mapping="pathname"
-                data-strict="0"
-                data-reactions-enabled="1"
-                data-emit-metadata="0"
-                data-input-position="bottom"
-                data-theme="dark_dimmed"
-                data-lang="tr"
-                crossorigin="anonymous"
-                async>
-        </script>
+    <div class="forum-container">
+        
+        <aside class="sidebar">
+            <h3>Kategoriler</h3>
+            <a href="?kategori=genel" class="kategori-link" id="cat-genel">Genel Sohbet</a>
+            <a href="?kategori=yazilim" class="kategori-link" id="cat-yazilim">Yazılım ve C++</a>
+            <a href="?kategori=oyun-gelistirme" class="kategori-link" id="cat-oyun-gelistirme">Oyun Geliştirme</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="forum-header-info">
+                <h2 id="kategoriBaslik">Genel Sohbet</h2>
+                <p id="kategoriDetay">Platform kuralları, duyurular ve genel konular hakkındaki tartışma alanı.</p>
+            </div>
+
+            <div id="giscus-forum-kutusu"></div>
+        </main>
+
     </div>
 
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        let aktifKategori = urlParams.get('kategori') || 'genel';
+
+        const kategoriBilgileri = {
+            'genel': { 
+                baslik: 'Genel Sohbet', 
+                detay: 'Platform kuralları, duyurular ve genel konular hakkındaki tartışma alanı.' 
+            },
+            'yazilim': { 
+                baslik: 'Yazılım ve C++', 
+                detay: 'Programlama dilleri, C++ mimarisi, algoritmalar ve optimizasyon süreçleri.' 
+            },
+            'oyun-gelistirme': { 
+                baslik: 'Oyun Geliştirme', 
+                detay: 'Oyun motorları, shader programlama, veri yapıları ve performans optimizasyonları.' 
+            }
+        };
+
+        if(!kategoriBilgileri[aktifKategori]) aktifKategori = 'genel';
+
+        document.getElementById('kategoriBaslik').innerText = kategoriBilgileri[aktifKategori].baslik;
+        document.getElementById('kategoriDetay').innerText = kategoriBilgileri[aktifKategori].detay;
+        document.getElementById(`cat-${aktifKategori}`).classList.add('active');
+
+        const giscusKutusu = document.getElementById('giscus-forum-kutusu');
+        const script = document.createElement('script');
+        script.src = "https://giscus.app/client.js";
+        script.setAttribute("data-repo", "beko-soft/techforum");
+        script.setAttribute("data-repo-id", "R_kgDOS5yp7g");
+        script.setAttribute("data-category", "General");
+        script.setAttribute("data-category-id", "DIC_kwDOS5yp7s4C_Fuu");
+        
+        script.setAttribute("data-mapping", "specific");
+        script.setAttribute("data-term", `forum-kategori-${aktifKategori}`); 
+        
+        script.setAttribute("data-strict", "0");
+        script.setAttribute("data-reactions-enabled", "1");
+        script.setAttribute("data-emit-metadata", "0");
+        script.setAttribute("data-input-position", "bottom");
+        script.setAttribute("data-theme", "dark_dimmed");
+        script.setAttribute("data-lang", "tr");
+        script.crossOrigin = "anonymous";
+        script.async = true;
+
+        giscusKutusu.appendChild(script);
+    </script>
 </body>
 </html>
