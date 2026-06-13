@@ -29,22 +29,6 @@
             font-size: 24px; 
             font-weight: 600;
         }
-        
-        .btn-yeni-konu {
-            background-color: #347d39;
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        
-        .btn-yeni-konu:hover { 
-            background-color: #46954a; 
-        }
 
         .forum-container {
             display: grid;
@@ -115,21 +99,21 @@
 
     <header>
         <h1>TechForum</h1>
-        <a href="https://github.com/beko-soft/techforum/discussions/new" target="_blank" class="btn-yeni-konu">Yeni Konu Aç</a>
     </header>
 
     <div class="forum-container">
         
         <aside class="sidebar">
             <h3>Kategoriler</h3>
-            <a href="?kategori=genel" class="kategori-link" id="cat-genel">Genel Sohbet</a>
-            <a href="?kategori=yazilim" class="kategori-link" id="cat-yazilim">Yazılım ve C++</a>
-            <a href="?kategori=oyun-gelistirme" class="kategori-link" id="cat-oyun-gelistirme">Oyun Geliştirme</a>
+            <a href="?kategori=genel" class="kategori-link" id="cat-genel">Genel</a>
+            <a href="?kategori=linux" class="kategori-link" id="cat-linux">Linux / İşletim Sistemleri</a>
+            <a href="?kategori=programlama" class="kategori-link" id="cat-programlama">Programlama / Yazılım Geliştirme</a>
+            <a href="?kategori=yapay-zeka" class="kategori-link" id="cat-yapay-zeka">Yapay Zeka</a>
         </aside>
 
         <main class="main-content">
             <div class="forum-header-info">
-                <h2 id="kategoriBaslik">Genel Sohbet</h2>
+                <h2 id="kategoriBaslik">Genel</h2>
                 <p id="kategoriDetay">Platform kuralları, duyurular ve genel konular hakkındaki tartışma alanı.</p>
             </div>
 
@@ -144,16 +128,20 @@
 
         const kategoriBilgileri = {
             'genel': { 
-                baslik: 'Genel Sohbet', 
+                baslik: 'Genel', 
                 detay: 'Platform kuralları, duyurular ve genel konular hakkındaki tartışma alanı.' 
             },
-            'yazilim': { 
-                baslik: 'Yazılım ve C++', 
-                detay: 'Programlama dilleri, C++ mimarisi, algoritmalar ve optimizasyon süreçleri.' 
+            'linux': { 
+                baslik: 'Linux / İşletim Sistemleri', 
+                detay: 'Çekirdek mimarisi, dağıtımlar, sistem yönetimi ve optimizasyon süreçleri.' 
             },
-            'oyun-gelistirme': { 
-                baslik: 'Oyun Geliştirme', 
-                detay: 'Oyun motorları, shader programlama, veri yapıları ve performans optimizasyonları.' 
+            'programlama': { 
+                baslik: 'Programlama / Yazılım Geliştirme', 
+                detay: 'Derleme dilleri, yazılım mimarileri, kaynak yönetimi ve algoritmalar.' 
+            },
+            'yapay-zeka': { 
+                baslik: 'Yapay Zeka', 
+                detay: 'Yerel modeller, sinir ağları, veri işleme ve yapay zeka entegrasyonları.' 
             }
         };
 
