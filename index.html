@@ -129,19 +129,23 @@
         const kategoriBilgileri = {
             'genel': { 
                 baslik: 'Genel', 
-                detay: 'Platform kuralları, duyurular ve genel konular hakkındaki tartışma alanı.' 
+                detay: 'Platform kuralları, duyurular ve genel konular hakkındaki tartışma alanı.',
+                term: 'techforum-v2-genel-sohbet'
             },
             'linux': { 
                 baslik: 'Linux / İşletim Sistemleri', 
-                detay: 'Çekirdek mimarisi, dağıtımlar, sistem yönetimi ve optimizasyon süreçleri.' 
+                detay: 'Çekirdek mimarisi, dağıtımlar, sistem yönetimi ve optimizasyon süreçleri.',
+                term: 'techforum-v2-linux-sistemler'
             },
             'programlama': { 
                 baslik: 'Programlama / Yazılım Geliştirme', 
-                detay: 'Derleme dilleri, yazılım mimarileri, kaynak yönetimi ve algoritmalar.' 
+                detay: 'Derleme dilleri, yazılım mimarileri, kaynak yönetimi ve algoritmalar.',
+                term: 'techforum-v2-programlama-yazilim'
             },
             'yapay-zeka': { 
                 baslik: 'Yapay Zeka', 
-                detay: 'Yerel modeller, sinir ağları, veri işleme ve yapay zeka entegrasyonları.' 
+                detay: 'Yerel modeller, sinir ağları, veri işleme ve yapay zeka entegrasyonları.',
+                term: 'techforum-v2-yapay-zeka-ai'
             }
         };
 
@@ -151,7 +155,10 @@
         document.getElementById('kategoriDetay').innerText = kategoriBilgileri[aktifKategori].detay;
         document.getElementById(`cat-${aktifKategori}`).classList.add('active');
 
+        // Eski giscus yüklemesini temizle
         const giscusKutusu = document.getElementById('giscus-forum-kutusu');
+        giscusKutusu.innerHTML = '';
+
         const script = document.createElement('script');
         script.src = "https://giscus.app/client.js";
         script.setAttribute("data-repo", "beko-soft/techforum");
@@ -159,10 +166,11 @@
         script.setAttribute("data-category", "General");
         script.setAttribute("data-category-id", "DIC_kwDOS5yp7s4C_Fuu");
         
+        // Çakışmayı önlemek için her kategoriye tamamen yeni ve benzersiz anahtarlar atandı
         script.setAttribute("data-mapping", "specific");
-        script.setAttribute("data-term", `forum-kategori-${aktifKategori}`); 
+        script.setAttribute("data-term", kategoriBilgileri[aktifKategori].term); 
         
-        script.setAttribute("data-strict", "0");
+        script.setAttribute("data-strict", "1");
         script.setAttribute("data-reactions-enabled", "1");
         script.setAttribute("data-emit-metadata", "0");
         script.setAttribute("data-input-position", "bottom");
