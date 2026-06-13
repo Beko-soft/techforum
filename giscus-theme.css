@@ -1,0 +1,21 @@
+main {
+  /* Ana Arka Plan ve Yazı Renkleri */
+  --color-canvas-default: #1c2128;    /* Yorum kutusunun arka planı */
+  --color-canvas-next: #22272e;       /* Giriş yapma alanı arka planı */
+  --color-fg-default: #adbac7;        /* Ana yazı rengi */
+  --color-fg-muted: #768390;          /* İkincil/Soluk yazı rengi */
+  
+  /* Kenarlıklar */
+  --color-border-default: #444c56;    /* Çizgiler ve çerçeveler */
+  --color-border-muted: #373e47;
+  
+  /* Linkler ve Butonlar */
+  --color-accent-fg: #539bf5;         /* Linkler ve aktif elementler */
+  --color-btn-primary-bg: #347d39;    /* Ana buton (Yorum Yap) arka planı */
+  --color-btn-primary-text: #ffffff;  /* Ana buton yazı rengi */
+  --color-btn-primary-hover-bg: #46954a;
+  
+  /* Reaksiyon (Emoji) Butonları */
+  --color-scale-gray-1: #22272e;
+  --color-scale-blue-1: #1f242c;
+}
