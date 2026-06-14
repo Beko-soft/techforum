@@ -176,7 +176,7 @@
                 <h2 id="kategoriBaslik">Genel</h2>
                 <p id="kategoriDetay">Platform kuralları, duyurular ve genel konular hakkındaki tartışma alanı.</p>
             </div>
-
+            
             <div id="giscus-forum-kutusu"></div>
         </main>
 
@@ -225,10 +225,17 @@
         document.getElementById('kategoriDetay').innerText = kategoriBilgileri[aktifKategori].detay;
         document.getElementById(`cat-${aktifKategori}`).classList.add('active');
 
-        // Ana Giscus Yüklemesi
+        // Ana Giscus Yüklemesi (Yeni konu açma kutusu gizlenmiş, sadece konular ve yorum yazma alanları mevcut)
         function loadMainGiscus() {
             const giscusKutusu = document.getElementById('giscus-forum-kutusu');
             giscusKutusu.innerHTML = '';
+
+            // Yerel dosya (file://) veya localhost ortamlarında dahi çalışan veri URI'si (Data URI) yöntemiyle CSS enjekte ediyoruz
+            const customCss = `@import url('https://giscus.app/themes/dark_dimmed.css');
+            .gsc-comment-box {
+                display: none !important;
+            }`;
+            const themeUrl = 'data:text/css;charset=utf-8,' + encodeURIComponent(customCss);
 
             const script = document.createElement('script');
             script.src = "https://giscus.app/client.js";
@@ -241,8 +248,8 @@
             script.setAttribute("data-strict", "1");
             script.setAttribute("data-reactions-enabled", "1");
             script.setAttribute("data-emit-metadata", "0");
-            script.setAttribute("data-input-position", "bottom"); // Yorum kutusu hep altta ve görünür
-            script.setAttribute("data-theme", "dark_dimmed");
+            script.setAttribute("data-input-position", "bottom"); // Alt tarafta tutuyoruz ama css ile gizli olacak
+            script.setAttribute("data-theme", themeUrl); // Özel CSS ile ana yazma alanı gizleniyor
             script.setAttribute("data-lang", "tr");
             script.crossOrigin = "anonymous";
             script.async = true;
@@ -250,7 +257,7 @@
             giscusKutusu.appendChild(script);
         }
 
-        // Modal Giscus Yüklemesi (Yeni Konu Açma Kutusu olarak)
+        // Modal Giscus Yüklemesi (Yeni Konu Açma Kutusu - comment box görünür)
         function loadModalGiscus() {
             const modalKutusu = document.getElementById('giscus-modal-kutusu');
             modalKutusu.innerHTML = '';
@@ -266,8 +273,8 @@
             script.setAttribute("data-strict", "1");
             script.setAttribute("data-reactions-enabled", "1");
             script.setAttribute("data-emit-metadata", "0");
-            script.setAttribute("data-input-position", "top"); // Konu açma/yorum yazma kutusu üstte
-            script.setAttribute("data-theme", "dark_dimmed");
+            script.setAttribute("data-input-position", "top"); // Konu açma kutusu üstte görünür olsun
+            script.setAttribute("data-theme", "dark_dimmed"); // Standart tema (Yazma alanı açık)
             script.setAttribute("data-lang", "tr");
             script.crossOrigin = "anonymous";
             script.async = true;
@@ -282,10 +289,14 @@
         const btn = document.getElementById("openModalBtn");
         const span = document.getElementsByClassName("close-modal")[0];
 
-        btn.onclick = function() {
+        function openTopicModal() {
+            document.getElementById('modalBaslik').innerText = kategoriBilgileri[aktifKategori].baslik + " - Yeni Konu Aç";
+            document.getElementById('modalDetay').innerText = kategoriBilgileri[aktifKategori].detay;
             modal.style.display = "block";
             loadModalGiscus();
         }
+
+        btn.onclick = openTopicModal;
 
         span.onclick = function() {
             modal.style.display = "none";
