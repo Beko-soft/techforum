@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TechForum | Teknik Tartışma Platformu</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="32x32">
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -21,6 +22,25 @@
             border-bottom: 1px solid #444c56;
             padding-bottom: 20px;
             margin-bottom: 20px;
+        }
+
+        .btn-new-topic {
+            background-color: #1f6feb;
+            color: #ffffff;
+            border: 1px solid rgba(240, 246, 252, 0.1);
+            border-radius: 6px;
+            padding: 5px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+
+        .btn-new-topic:hover {
+            background-color: #388bfd;
         }
         
         h1 { 
@@ -93,12 +113,52 @@
             color: #768390; 
             font-size: 14px; 
         }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background-color: #1c2128;
+            margin: 5% auto;
+            padding: 24px;
+            border: 1px solid #444c56;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 800px;
+            position: relative;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+
+        .close-modal {
+            color: #768390;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            color: #f0f6fc;
+        }
     </style>
 </head>
 <body>
 
     <header>
         <h1>TechForum</h1>
+        <button class="btn-new-topic" id="openModalBtn">Yeni Konu Aç</button>
     </header>
 
     <div class="forum-container">
@@ -120,6 +180,16 @@
             <div id="giscus-forum-kutusu"></div>
         </main>
 
+    </div>
+
+    <!-- Modal -->
+    <div id="topicModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 style="color: #f0f6fc; margin-top: 0;">Yeni Konu Başlat</h2>
+            <p style="color: #768390; font-size: 14px; margin-bottom: 20px;">Seçili kategori için yeni bir tartışma konusu açın.</p>
+            <div id="giscus-modal-kutusu"></div>
+        </div>
     </div>
 
     <script>
@@ -155,31 +225,79 @@
         document.getElementById('kategoriDetay').innerText = kategoriBilgileri[aktifKategori].detay;
         document.getElementById(`cat-${aktifKategori}`).classList.add('active');
 
-        // Eski giscus yüklemesini temizle
-        const giscusKutusu = document.getElementById('giscus-forum-kutusu');
-        giscusKutusu.innerHTML = '';
+        // Ana Giscus Yüklemesi
+        function loadMainGiscus() {
+            const giscusKutusu = document.getElementById('giscus-forum-kutusu');
+            giscusKutusu.innerHTML = '';
 
-        const script = document.createElement('script');
-        script.src = "https://giscus.app/client.js";
-        script.setAttribute("data-repo", "beko-soft/techforum");
-        script.setAttribute("data-repo-id", "R_kgDOS5yp7g");
-        script.setAttribute("data-category", "General");
-        script.setAttribute("data-category-id", "DIC_kwDOS5yp7s4C_Fuu");
-        
-        // Çakışmayı önlemek için her kategoriye tamamen yeni ve benzersiz anahtarlar atandı
-        script.setAttribute("data-mapping", "specific");
-        script.setAttribute("data-term", kategoriBilgileri[aktifKategori].term); 
-        
-        script.setAttribute("data-strict", "1");
-        script.setAttribute("data-reactions-enabled", "1");
-        script.setAttribute("data-emit-metadata", "0");
-        script.setAttribute("data-input-position", "bottom");
-        script.setAttribute("data-theme", "dark_dimmed");
-        script.setAttribute("data-lang", "tr");
-        script.crossOrigin = "anonymous";
-        script.async = true;
+            const script = document.createElement('script');
+            script.src = "https://giscus.app/client.js";
+            script.setAttribute("data-repo", "beko-soft/techforum");
+            script.setAttribute("data-repo-id", "R_kgDOS5yp7g");
+            script.setAttribute("data-category", "General");
+            script.setAttribute("data-category-id", "DIC_kwDOS5yp7s4C_Fuu");
+            script.setAttribute("data-mapping", "specific");
+            script.setAttribute("data-term", kategoriBilgileri[aktifKategori].term); 
+            script.setAttribute("data-strict", "1");
+            script.setAttribute("data-reactions-enabled", "1");
+            script.setAttribute("data-emit-metadata", "0");
+            script.setAttribute("data-input-position", "bottom"); // Yorum kutusu hep altta ve görünür
+            script.setAttribute("data-theme", "dark_dimmed");
+            script.setAttribute("data-lang", "tr");
+            script.crossOrigin = "anonymous";
+            script.async = true;
 
-        giscusKutusu.appendChild(script);
+            giscusKutusu.appendChild(script);
+        }
+
+        // Modal Giscus Yüklemesi (Sadece Input Odaklı gibi davranması için)
+        function loadModalGiscus() {
+            const modalKutusu = document.getElementById('giscus-modal-kutusu');
+            modalKutusu.innerHTML = '';
+
+            const script = document.createElement('script');
+            script.src = "https://giscus.app/client.js";
+            script.setAttribute("data-repo", "beko-soft/techforum");
+            script.setAttribute("data-repo-id", "R_kgDOS5yp7g");
+            script.setAttribute("data-category", "General");
+            script.setAttribute("data-category-id", "DIC_kwDOS5yp7s4C_Fuu");
+            script.setAttribute("data-mapping", "specific");
+            script.setAttribute("data-term", kategoriBilgileri[aktifKategori].term + "-yeni"); // Farklı term kullanarak çakışmayı önleyebiliriz veya aynı term
+            script.setAttribute("data-strict", "1");
+            script.setAttribute("data-reactions-enabled", "0");
+            script.setAttribute("data-emit-metadata", "0");
+            script.setAttribute("data-input-position", "top");
+            script.setAttribute("data-theme", "dark_dimmed");
+            script.setAttribute("data-lang", "tr");
+            script.crossOrigin = "anonymous";
+            script.async = true;
+
+            modalKutusu.appendChild(script);
+        }
+
+        loadMainGiscus();
+
+        // Modal İşlemleri
+        const modal = document.getElementById("topicModal");
+        const btn = document.getElementById("openModalBtn");
+        const span = document.getElementsByClassName("close-modal")[0];
+
+        btn.onclick = function() {
+            modal.style.display = "block";
+            loadModalGiscus();
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+            document.getElementById('giscus-modal-kutusu').innerHTML = '';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                document.getElementById('giscus-modal-kutusu').innerHTML = '';
+            }
+        }
     </script>
 </body>
 </html>
