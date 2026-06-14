@@ -130,6 +130,66 @@
         .btn-cancel:hover {
             background-color: #444c56;
         }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+                padding-bottom: 16px;
+                align-items: center;
+            }
+
+            .forum-container {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .sidebar {
+                padding: 12px;
+                order: 2; /* Put sidebar below content on mobile if preferred, or keep on top */
+            }
+
+            .main-content {
+                padding: 16px;
+                order: 1;
+            }
+
+            header div {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
+
+            .btn-new-topic, .btn-cancel {
+                padding: 12px 24px;
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .kategori-link {
+                display: inline-block;
+                padding: 6px 12px;
+                margin-right: 4px;
+                margin-bottom: 4px;
+                background-color: #22272e;
+                border: 1px solid #444c56;
+            }
+
+            .forum-header-info h2 {
+                font-size: 18px;
+            }
+
+            .forum-header-info p {
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 <body>
