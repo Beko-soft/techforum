@@ -151,13 +151,33 @@
             }
 
             .sidebar {
-                padding: 12px;
-                order: 2; /* Put sidebar below content on mobile if preferred, or keep on top */
+                padding: 10px;
+                order: 1;
+                position: sticky;
+                top: 10px;
+                z-index: 1000;
+                background: #1c2128;
+                display: flex;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                white-space: nowrap;
+                gap: 8px;
+                border-radius: 8px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+                scrollbar-width: none; /* Firefox */
+            }
+
+            .sidebar::-webkit-scrollbar {
+                display: none; /* Chrome, Safari, Edge */
+            }
+
+            .sidebar h3 {
+                display: none;
             }
 
             .main-content {
                 padding: 16px;
-                order: 1;
+                order: 2;
             }
 
             header div {
@@ -175,9 +195,13 @@
 
             .kategori-link {
                 display: inline-block;
-                padding: 6px 12px;
-                margin-right: 4px;
-                margin-bottom: 4px;
+                padding: 8px 16px;
+                margin: 0;
+                background-color: #22272e;
+                border: 1px solid #444c56;
+                flex: 0 0 auto;
+                font-size: 13px;
+            }
                 background-color: #22272e;
                 border: 1px solid #444c56;
             }
