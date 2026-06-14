@@ -176,9 +176,8 @@
                 <h2 id="kategoriBaslik">Genel</h2>
                 <p id="kategoriDetay">Platform kuralları, duyurular ve genel konular hakkındaki tartışma alanı.</p>
             </div>
-            <div style="text-align: center; padding: 40px 20px; color: #768390;">
-                <p style="font-size: 16px; margin-bottom: 20px;">Bu kategoriye ait tartışmaları görüntülemek veya yeni bir konu açmak için sağ üstteki butona tıklayın.</p>
-            </div>
+
+            <div id="giscus-forum-kutusu"></div>
         </main>
 
     </div>
@@ -187,8 +186,8 @@
     <div id="topicModal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
-            <h2 id="modalBaslik" style="color: #f0f6fc; margin-top: 0; font-size: 20px;">Tartışma Alanı</h2>
-            <p id="modalDetay" style="color: #768390; font-size: 14px; margin-bottom: 20px;">Kategori tartışmaları ve yeni konu başlatma alanı.</p>
+            <h2 id="modalBaslik" style="color: #f0f6fc; margin-top: 0; font-size: 20px;">Yeni Konu Aç</h2>
+            <p id="modalDetay" style="color: #768390; font-size: 14px; margin-bottom: 20px;">Seçili kategori için yeni bir tartışma konusu başlatın.</p>
             <div id="giscus-modal-kutusu"></div>
         </div>
     </div>
@@ -226,7 +225,32 @@
         document.getElementById('kategoriDetay').innerText = kategoriBilgileri[aktifKategori].detay;
         document.getElementById(`cat-${aktifKategori}`).classList.add('active');
 
-        // Modal Giscus Yüklemesi
+        // Ana Giscus Yüklemesi
+        function loadMainGiscus() {
+            const giscusKutusu = document.getElementById('giscus-forum-kutusu');
+            giscusKutusu.innerHTML = '';
+
+            const script = document.createElement('script');
+            script.src = "https://giscus.app/client.js";
+            script.setAttribute("data-repo", "beko-soft/techforum");
+            script.setAttribute("data-repo-id", "R_kgDOS5yp7g");
+            script.setAttribute("data-category", "General");
+            script.setAttribute("data-category-id", "DIC_kwDOS5yp7s4C_Fuu");
+            script.setAttribute("data-mapping", "specific");
+            script.setAttribute("data-term", kategoriBilgileri[aktifKategori].term); 
+            script.setAttribute("data-strict", "1");
+            script.setAttribute("data-reactions-enabled", "1");
+            script.setAttribute("data-emit-metadata", "0");
+            script.setAttribute("data-input-position", "bottom"); // Yorum kutusu hep altta ve görünür
+            script.setAttribute("data-theme", "dark_dimmed");
+            script.setAttribute("data-lang", "tr");
+            script.crossOrigin = "anonymous";
+            script.async = true;
+
+            giscusKutusu.appendChild(script);
+        }
+
+        // Modal Giscus Yüklemesi (Yeni Konu Açma Kutusu olarak)
         function loadModalGiscus() {
             const modalKutusu = document.getElementById('giscus-modal-kutusu');
             modalKutusu.innerHTML = '';
@@ -238,11 +262,11 @@
             script.setAttribute("data-category", "General");
             script.setAttribute("data-category-id", "DIC_kwDOS5yp7s4C_Fuu");
             script.setAttribute("data-mapping", "specific");
-            script.setAttribute("data-term", kategoriBilgileri[aktifKategori].term); // Bulunduğumuz konudaki tartışmaya otomatik yönlendirme
+            script.setAttribute("data-term", kategoriBilgileri[aktifKategori].term); // Aynı konuya yönlendirir
             script.setAttribute("data-strict", "1");
             script.setAttribute("data-reactions-enabled", "1");
             script.setAttribute("data-emit-metadata", "0");
-            script.setAttribute("data-input-position", "bottom"); // Yorum kutusu hep altta ve görünür
+            script.setAttribute("data-input-position", "top"); // Konu açma/yorum yazma kutusu üstte
             script.setAttribute("data-theme", "dark_dimmed");
             script.setAttribute("data-lang", "tr");
             script.crossOrigin = "anonymous";
@@ -251,14 +275,14 @@
             modalKutusu.appendChild(script);
         }
 
+        loadMainGiscus();
+
         // Modal İşlemleri
         const modal = document.getElementById("topicModal");
         const btn = document.getElementById("openModalBtn");
         const span = document.getElementsByClassName("close-modal")[0];
 
         btn.onclick = function() {
-            document.getElementById('modalBaslik').innerText = kategoriBilgileri[aktifKategori].baslik + " - Tartışma ve Yeni Konu";
-            document.getElementById('modalDetay').innerText = kategoriBilgileri[aktifKategori].detay;
             modal.style.display = "block";
             loadModalGiscus();
         }
@@ -274,9 +298,6 @@
                 document.getElementById('giscus-modal-kutusu').innerHTML = '';
             }
         }
-    </script>
-</body>
-</html>
     </script>
 </body>
 </html>
