@@ -202,9 +202,6 @@
                 flex: 0 0 auto;
                 font-size: 13px;
             }
-                background-color: #22272e;
-                border: 1px solid #444c56;
-            }
 
             .forum-header-info h2 {
                 font-size: 18px;
@@ -289,9 +286,9 @@
             let inputPosition = "bottom";
 
             if (!showInput) {
-                // Input gizleme için özel CSS
+                // Sadece ana (en alttaki büyük) kutuyu gizler. Cevap kutularına dokunmaz.
                 const customCss = `@import url('https://giscus.app/themes/dark_dimmed.css');
-                .gsc-comment-box { display: none !important; }`;
+                .gsc-main > .gsc-comment-box { display: none !important; }`;
                 theme = 'data:text/css;charset=utf-8,' + encodeURIComponent(customCss);
             } else {
                 // Yeni konu açma kutusu en üstte gelsin
