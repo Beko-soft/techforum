@@ -283,16 +283,13 @@
             giscusKutusu.innerHTML = '';
 
             let theme = "dark_dimmed";
-            let inputPosition = "bottom";
+            let inputPosition = "top"; // Her iki durumda da üstte tutarak alttaki hayalet kutuyu yok ediyoruz.
 
             if (!showInput) {
-                // Sadece ana dikey akıştaki büyük kutuyu hedefler. Cevaplama kutularına (.gsc-reply-box .gsc-comment-box) dokunmaz.
+                // Sadece ana akıştaki büyük kutuyu gizler. Cevaplama kutularına dokunmaz.
                 const customCss = `@import url('https://giscus.app/themes/dark_dimmed.css');
                 .gsc-main > .gsc-comment-box { display: none !important; }`;
                 theme = 'data:text/css;charset=utf-8,' + encodeURIComponent(customCss);
-            } else {
-                // Yeni konu açma kutusu en üstte gelsin
-                inputPosition = "top";
             }
 
             const script = document.createElement('script');
