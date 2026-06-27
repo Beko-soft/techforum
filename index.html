@@ -236,7 +236,7 @@
         <main class="main-content">
             <div class="forum-header-info">
                 <h2 id="kategoriBaslik">Genel</h2>
-                <p id="kategoriDetay">Platform kuralları, duyurular and genel konular hakkındaki tartışma alanı.</p>
+                <p id="kategoriDetay">Platform kuralları, duyurular ve genel konular hakkındaki tartışma alanı.</p>
             </div>
             
             <div id="giscus-forum-kutusu"></div>
@@ -286,10 +286,9 @@
             let inputPosition = "bottom";
 
             if (!showInput) {
-                // Sadece ana yorum kutusunu gizle, cevaplama (reply) kutularına dokunma
+                // Sadece ana dikey akıştaki büyük kutuyu hedefler. Cevaplama kutularına (.gsc-reply-box .gsc-comment-box) dokunmaz.
                 const customCss = `@import url('https://giscus.app/themes/dark_dimmed.css');
-                iframe { display: block !important; }
-                iframe .gsc-comment-box { display: none !important; }`;
+                .gsc-main > .gsc-comment-box { display: none !important; }`;
                 theme = 'data:text/css;charset=utf-8,' + encodeURIComponent(customCss);
             } else {
                 // Yeni konu açma kutusu en üstte gelsin
