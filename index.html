@@ -131,6 +131,20 @@
             background-color: #444c56;
         }
 
+        /* Giscus Kırpma Alanı Modeli */
+        #giscus-forum-kutusu {
+            display: block;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        /* Normal durumda en alttaki inputu dışarıda bırakıp görünmez yapıyoruz */
+        #giscus-forum-kutusu.hide-main-input {
+            max-height: calc(100% - 150px); 
+            overflow: hidden;
+            margin-bottom: -180px; 
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             body {
@@ -239,7 +253,7 @@
                 <p id="kategoriDetay">Platform kuralları, duyurular ve genel konular hakkındaki tartışma alanı.</p>
             </div>
             
-            <div id="giscus-forum-kutusu"></div>
+            <div id="giscus-forum-kutusu" class="hide-main-input"></div>
         </main>
 
     </div>
@@ -277,20 +291,12 @@
         document.getElementById('kategoriDetay').innerText = kategoriBilgileri[aktifKategori].detay;
         document.getElementById(`cat-${aktifKategori}`).classList.add('active');
 
-        // Giscus Yükleme Fonksiyonu
+        // Giscus Yükleme Fonksiyonu (Yalnızca bir kez temiz yükleme yapar)
         function loadGiscus(showInput = false) {
             const giscusKutusu = document.getElementById('giscus-forum-kutusu');
             giscusKutusu.innerHTML = '';
 
-            let theme = "dark_dimmed";
-            let inputPosition = "top"; // Her iki durumda da üstte tutarak alttaki hayalet kutuyu yok ediyoruz.
-
-            if (!showInput) {
-                // Sadece ana akıştaki büyük kutuyu gizler. Cevaplama kutularına dokunmaz.
-                const customCss = `@import url('https://giscus.app/themes/dark_dimmed.css');
-                .gsc-main > .gsc-comment-box { display: none !important; }`;
-                theme = 'data:text/css;charset=utf-8,' + encodeURIComponent(customCss);
-            }
+            let inputPosition = showInput ? "top" : "bottom";
 
             const script = document.createElement('script');
             script.src = "https://giscus.app/client.js";
@@ -304,19 +310,28 @@
             script.setAttribute("data-reactions-enabled", "1");
             script.setAttribute("data-emit-metadata", "0");
             script.setAttribute("data-input-position", inputPosition);
-            script.setAttribute("data-theme", theme);
+            script.setAttribute("data-theme", "dark_dimmed");
             script.setAttribute("data-lang", "tr");
             script.crossOrigin = "anonymous";
             script.async = true;
 
             giscusKutusu.appendChild(script);
 
-            // Buton durumlarını güncelle
+            toggleVisuals(showInput);
+        }
+
+        function toggleVisuals(showInput) {
+            const kutu = document.getElementById('giscus-forum-kutusu');
+            if (showInput) {
+                kutu.classList.remove('hide-main-input');
+            } else {
+                kutu.classList.add('hide-main-input');
+            }
             document.getElementById('cancelBtn').style.display = showInput ? 'inline-block' : 'none';
             document.getElementById('openTopicBtn').style.display = showInput ? 'none' : 'inline-block';
         }
 
-        // İlk yükleme (Input gizli)
+        // İlk yükleme (Normal Görünüm, alt kutu gizli ve kırpılmış)
         loadGiscus(false);
 
         // Buton İşlemleri
@@ -324,11 +339,11 @@
         const cancelBtn = document.getElementById("cancelBtn");
 
         openTopicBtn.onclick = function() {
-            loadGiscus(true);
+            loadGiscus(true); // Kutuyu en üstte göstermek için yeniden yapılandırır
         };
 
         cancelBtn.onclick = function() {
-            loadGiscus(false);
+            loadGiscus(false); // Kutuyu alta alır ve kırparak gizler
         };
     </script>
 </body>
